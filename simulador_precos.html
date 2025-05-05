@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Preço - Shopee e Shein</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
+    label, input { display: block; margin-bottom: 10px; width: 100%; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background-color: #f2f2f2; }
+    button { padding: 10px 20px; }
+  </style>
+</head>
+<body>
+  <h2>Simulador de Preço - Shopee e Shein</h2>
+  <label>Preço de Custo: <input type="number" id="custo" step="0.01"></label>
+  <label>Gasto com Embalagem: <input type="number" id="embalagem" step="0.01"></label>
+  <label>Imposto Estimado: <input type="number" id="imposto" step="0.01"></label>
+  <label>Margem Desejada (markup, ex: 1.8): <input type="number" id="markup" step="0.01"></label>
+  <button onclick="calcular()">Calcular</button>
+
+  <table id="resultado" style="display:none;">
+    <thead>
+      <tr>
+        <th>Plataforma</th>
+        <th>Preço Sugerido</th>
+        <th>Comissão</th>
+        <th>Frete</th>
+        <th>Receita Líquida</th>
+        <th>Lucro</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    function calcular() {
+      const custo = parseFloat(document.getElementById('custo').value);
+      const embalagem = parseFloat(document.getElementById('embalagem').value);
+      const imposto = parseFloat(document.getElementById('imposto').value);
+      const markup = parseFloat(document.getElementById('markup').value);
+      const custoTotal = custo + embalagem + imposto;
+      const precoSugerido = custoTotal * markup;
+
+      const plataformas = [
+        { nome: 'Shopee', comissao: 0.20, frete: 5.00 },
+        { nome: 'Shein', comissao: 0.16, frete: 5.00 }
+      ];
+
+      let tbody = '';
+      plataformas.forEach(p => {
+        const comissao = precoSugerido * p.comissao;
+        const receita = precoSugerido - comissao - p.frete;
+        const lucro = receita - custoTotal;
+        tbody += `<tr>
+          <td>${p.nome}</td>
+          <td>R$ ${precoSugerido.toFixed(2)}</td>
+          <td>R$ ${comissao.toFixed(2)}</td>
+          <td>R$ ${p.frete.toFixed(2)}</td>
+          <td>R$ ${receita.toFixed(2)}</td>
+          <td>R$ ${lucro.toFixed(2)}</td>
+        </tr>`;
+      });
+
+      document.querySelector('#resultado tbody').innerHTML = tbody;
+      document.getElementById('resultado').style.display = 'table';
+    }
+  </script>
+</body>
+</html>
